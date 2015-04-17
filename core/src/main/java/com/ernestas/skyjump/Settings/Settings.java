@@ -1,8 +1,8 @@
 package com.ernestas.skyjump.Settings;
 
 public class Settings {
-    public static final int DEFAULT_WIDTH = 500;
-    public static final int DEFAULT_HEIGHT = 350;
+    public static final int DEFAULT_WIDTH = 600;
+    public static final int DEFAULT_HEIGHT = 300;
     public static final int DEFAULT_FRAME_RATE = 60;
 
     /********************************************************/

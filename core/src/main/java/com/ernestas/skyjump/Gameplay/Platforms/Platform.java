@@ -2,6 +2,7 @@ package com.ernestas.skyjump.Gameplay.Platforms;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.ernestas.skyjump.Settings.Settings;
 import com.ernestas.skyjump.Sprite.ScaledSprite;
 
 public abstract class Platform {
@@ -14,6 +15,7 @@ public abstract class Platform {
         this.bounds = bounds;
 
         sprite.setPosition(bounds.x, bounds.y);
+        sprite.setScale((bounds.width * Settings.getScale() / sprite.getWidth()), sprite.getScaleY());
     }
 
     public ScaledSprite getSprite() { return sprite; }

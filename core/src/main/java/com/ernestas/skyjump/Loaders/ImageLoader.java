@@ -12,8 +12,12 @@ import java.util.List;
 public class ImageLoader {
     private static final String SPRITE_LOCATION = "Sprites/";
     private static final String PLATFORM_LOCATION = SPRITE_LOCATION + "Platforms/";
+    private static final String PLAYER_LOCATION = SPRITE_LOCATION + "Player/";
 
+    // everything here must be in the map
     public static final String SPLASH = "badlogic.jpg";
+    public static final String PLAYER = PLAYER_LOCATION + "player.png";
+
     public static final String SIMPLE_PLATFORM = PLATFORM_LOCATION + "simple_platform.png";
 
     List<String> spritePaths;
@@ -30,6 +34,7 @@ public class ImageLoader {
 
         spritePaths.add(SPLASH);
         spritePaths.add(SIMPLE_PLATFORM);
+        spritePaths.add(PLAYER);
     }
 
     private void populateMap() {

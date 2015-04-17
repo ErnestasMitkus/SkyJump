@@ -3,7 +3,20 @@ package com.ernestas.skyjump.Input;
 import com.ernestas.skyjump.Settings.Settings;
 import com.ernestas.skyjump.Util.Vectors.Vector2f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InputProcessor implements com.badlogic.gdx.InputProcessor {
+
+    private class DelayStruct {
+        public DelayStruct(float delay, int index) {
+            delayLeft = delay;
+            this.index = index;
+        }
+
+        public float delayLeft;
+        public int index;
+    }
 
     public static final int KEY_UP = 0;
     public static final int KEY_PRESSED = 1;
@@ -15,12 +28,27 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
     private boolean mouseDown;
     private Vector2f mousePos = new Vector2f();
 
+    private List<DelayStruct> delayStruct;
+
     public InputProcessor() {
+        delayStruct = new ArrayList<>();
         for (int i = 0; i < keys.length; ++i) {
             keys[i] = KEY_UP;
         }
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = false;
+        }
+    }
+
+    public void update(float delta) {
+        for (int i = 0; i < delayStruct.size(); ++i) {
+            DelayStruct struct = delayStruct.get(i);
+            struct.delayLeft -= delta;
+            if (struct.delayLeft <= 0) {
+                keys[struct.index] = KEY_UP;
+                delayStruct.remove(i);
+                --i;
+            }
         }
     }
 
@@ -32,6 +60,11 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        for (DelayStruct struct : delayStruct) {
+            if (struct.index == keycode) {
+                return true;
+            }
+        }
         keys[keycode] = KEY_UP;
         return true;
     }
@@ -95,6 +128,20 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
         return result;
     }
 
+    public boolean isPressedWithDelay(int keycode, float delay) {
+        boolean eventScheduled = false;
+
+        for (DelayStruct struct : delayStruct) {
+            eventScheduled = eventScheduled || struct.index == keycode;
+        }
+
+        if (!eventScheduled) {
+            delayStruct.add(new DelayStruct(delay, keycode));
+        }
+
+        return keys[keycode] == KEY_PRESSED;
+    }
+
     public boolean mouseButtonPressed(int button) {
         if (button < 0 || button >= buttons.length) {
             System.err.println("MOUSE BUTTON INDEX OUT OF BOUNDS. int[" + button + "]");
@@ -102,7 +149,7 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
         }
         return buttons[button];
     }
-
     public boolean mouseDown() { return mouseDown; }
+
     public Vector2f getMousePos() { return mousePos; }
 }
