@@ -15,7 +15,7 @@ public abstract class Platform {
         this.bounds = bounds;
 
         sprite.setPosition(bounds.x, bounds.y);
-        sprite.setScale((bounds.width * Settings.getScale() / sprite.getWidth()), sprite.getScaleY());
+        sprite.setScale((bounds.width * Settings.getScale() / sprite.getWidth()), (bounds.height * Settings.getScale()) / sprite.getHeight());
     }
 
     public ScaledSprite getSprite() { return sprite; }

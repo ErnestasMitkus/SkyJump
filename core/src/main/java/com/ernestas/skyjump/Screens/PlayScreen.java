@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.ernestas.skyjump.Gameplay.Level;
 import com.ernestas.skyjump.Gameplay.Player;
 import com.ernestas.skyjump.Input.InputProcessor;
@@ -23,6 +24,8 @@ public class PlayScreen implements Screen {
     private SpriteBatch batch;
 
     private OrthographicCamera camera;
+    private float cameraMaximumSpeed = 60f;
+    private float cameraSpeed = 0f;
 
     private Level level;
 
@@ -34,18 +37,23 @@ public class PlayScreen implements Screen {
         input = game.getInput();
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Settings.getWidth(), Settings.getHeight());
-        camera.position.set(600f - Settings.getWidth() / 2f, Settings.getHeight() / 2f, 0);
     }
 
     @Override
     public void show() {
         level = LevelProvider.generateLevel("Levels/testlevel.json");
         level.init(input);
+        reset();
     }
 
     private void reset() {
         level.reset();
-        // update camera to player
+
+        Vector2 vec = new Vector2();
+        level.getPlayer().getBounds().getCenter(vec);
+
+        camera.position.set(vec.x, vec.y, 0);
+        camera.update();
     }
 
     @Override
@@ -87,10 +95,6 @@ public class PlayScreen implements Screen {
     public void update(float delta) {
         input.update(delta);
 
-        float cameraSpeed = 200f;
-        float vecX = 0f;
-        float vecY = 0f;
-
         if (input.isPressedAdvanced(Keys.STAR)) {
             debug = !debug;
         }
@@ -101,25 +105,42 @@ public class PlayScreen implements Screen {
             reset();
         }
 
-        if (input.isPressed(Keys.LEFT)) {
-            --vecX;
-        }
-        if (input.isPressed(Keys.RIGHT)) {
-            ++vecX;
-        }
-        if (input.isPressed(Keys.UP)) {
-            ++vecY;
-        }
-        if (input.isPressed(Keys.DOWN)) {
-            --vecY;
-        }
-
-        if (vecX != 0 || vecY != 0) {
-            camera.translate(cameraSpeed * vecX * delta, cameraSpeed * vecY * delta);
-            camera.update();
-        }
+        updateCamera(delta);
 
         level.update(delta);
+    }
+
+    private void updateCamera(float delta) {
+        boolean hardFocusCam = false;
+        float dx, dy;
+        Vector2 vec = new Vector2();
+        level.getPlayer().getBounds().getCenter(vec);
+
+        dx = vec.x - camera.position.x;
+        if (Math.abs(vec.x - camera.position.x) < 0.5f || hardFocusCam) {
+            dx = vec.x - camera.position.x;
+        } else {
+            dx *= cameraMaximumSpeed * Math.pow(delta, 2);
+        }
+
+        dy = vec.y - camera.position.y;
+        if (Math.abs(vec.y - camera.position.y) < 0.5f || hardFocusCam) {
+            dy = vec.y - camera.position.y;
+        } else {
+            dy *= cameraMaximumSpeed * Math.pow(delta, 2);
+        }
+
+        if (camera.position.y + dy < camera.viewportHeight / 2) {
+            dy = camera.viewportHeight / 2 - camera.position.y;
+        }
+        if (!level.inSecret()) {
+            if (camera.position.x + dx < camera.viewportWidth / 2) {
+                dx = camera.viewportWidth / 2 - camera.position.x;
+            }
+        }
+
+        camera.translate(dx, dy);
+        camera.update();
     }
 
     @Override

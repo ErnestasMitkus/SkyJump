@@ -50,9 +50,9 @@ public class LevelProvider {
             int id = platformArray.getInt(0);
             int x = platformArray.getInt(1);
             int y = platformArray.getInt(2);
-            int width = platformArray.getInt(3);
+            int length = platformArray.getInt(3);
 
-            platforms.add(PlatformGenerator.generatePlatform(id, new Rectangle(x, y, width, 32)));
+            platforms.add(PlatformGenerator.generatePlatform(id, new Rectangle(x, y, length, length)));
         }
 
         return platforms;

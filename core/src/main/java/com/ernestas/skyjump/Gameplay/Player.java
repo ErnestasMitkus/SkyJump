@@ -18,19 +18,25 @@ public class Player {
     private Level level;
     private InputProcessor input;
 
-    private float playerSpeed = 200f;
-    private float jumpStrength = 450f;
+    private float playerSpeed = 200f * Settings.getScale();
+    private float jumpStrength = 300f * Settings.getScale();
 
     private boolean isJumping = false;
-    private boolean isFalling = false;
+    private boolean isFalling = true;
+    private boolean touchedGround = false;
 
-    private Vector2f mov = new Vector2f();
-    private boolean facingLeft = true;
+    private Vector2f mov;
+    private boolean facingLeft = false;
 
     public Player(Level level, InputProcessor input) {
         this.level = level;
         this.input = input;
         sprite = new ScaledSprite(new Sprite(GameResources.getImageLoader().getImage(ImageLoader.PLAYER)));
+        restart();
+    }
+
+    public void restart() {
+        mov = new Vector2f();
     }
 
     public void render(SpriteBatch batch) {
@@ -50,20 +56,19 @@ public class Player {
             ++mov.x;
         }
 
-        if (input.isPressedWithDelay(Keys.SPACE, 0.5f)) {
-            if (!isJumping && !isFalling) {
-                input.isPressedAdvanced(Keys.SPACE);
+//        if (input.isPressedWithDelay(Keys.SPACE, 0.1f)) {
+        if (input.isPressed(Keys.SPACE)) {
+            if (touchedGround) {
+//                input.consume(Keys.SPACE);
                 isJumping = true;
+                touchedGround = false;
                 mov.y += jumpStrength;
             }
         }
 
         mov.y += Level.GRAVITY_VALUE;
-        move(mov.x * playerSpeed * delta, mov.y * delta);
 
-        if (mov.y < 0) {
-            isFalling = true;
-        }
+        move(mov.x * playerSpeed * delta, mov.y * delta);
     }
 
     public Rectangle getBounds() {
@@ -84,11 +89,6 @@ public class Player {
             return;
         }
 
-        // No movement
-        if (vecX + vecY == 0) {
-            return;
-        }
-
         Rectangle rec = getBounds();
         rec.x += vecX;
         rec.y += vecY;
@@ -103,23 +103,23 @@ public class Player {
                 }
             } else if (vecY < 0) {
                 if (!isFalling) {
-                    isFalling = true;
                     isJumping = false;
+                    isFalling = true;
                 }
             }
         } else {
             if (vecY > 0) {
                 // hit something above
-                if (isJumping && !isFalling) {
-                    isJumping = false;
-                    isFalling = true;
-                    mov.y = 0f;
-                }
+                isJumping = false;
+                isFalling = true;
+                mov.y = 0f;
             } else if (vecY < 0) {
                 // hit something below
                 isJumping = false;
                 isFalling = false;
-                mov.y = 0f;
+                touchedGround = true;
+                mov.y = 0;
+                sprite.translate(0, -level.getClosestGround(getBounds()));
             }
         }
     }

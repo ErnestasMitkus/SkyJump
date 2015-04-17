@@ -4,25 +4,27 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.ernestas.skyjump.Loaders.ImageLoader;
 import com.ernestas.skyjump.Resources.GameResources;
-import com.ernestas.skyjump.Settings.Settings;
 import com.ernestas.skyjump.Sprite.ScaledSprite;
-import com.ernestas.skyjump.Util.Vectors.Vector2f;
 
 public class SimplePlatform extends Platform {
 
     private int id;
 
     public SimplePlatform(int id, Rectangle bounds) {
-        super(new ScaledSprite(getDefaultSprite()), bounds);
-
+        super(new ScaledSprite(getDefaultSprite(id)), bounds);
         this.id = id;
     }
 
-    public SimplePlatform(int id, Vector2f position) {
-        this(id, new Rectangle(position.x, position.y, 128 * Settings.getScale(), 32 * Settings.getScale()));
-    }
-
-    private static Sprite getDefaultSprite() {
-        return GameResources.getImageLoader().getImage(ImageLoader.SIMPLE_PLATFORM);
+    private static Sprite getDefaultSprite(int id) {
+        switch(id) {
+            case PlatformGenerator.GROUND_PLATFORM:
+                return GameResources.getImageLoader().getImage(ImageLoader.GROUND_PLATFORM);
+            case PlatformGenerator.SIMPLE_PLATFORM:
+                return GameResources.getImageLoader().getImage(ImageLoader.SIMPLE_PLATFORM);
+            case PlatformGenerator.WALL:
+                return GameResources.getImageLoader().getImage(ImageLoader.WALL);
+            default:
+                return null;
+        }
     }
 }

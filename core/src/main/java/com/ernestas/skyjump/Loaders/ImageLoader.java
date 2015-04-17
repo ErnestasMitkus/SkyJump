@@ -15,10 +15,12 @@ public class ImageLoader {
     private static final String PLAYER_LOCATION = SPRITE_LOCATION + "Player/";
 
     // everything here must be in the map
-    public static final String SPLASH = "badlogic.jpg";
+    public static final String BACKGROUND = SPRITE_LOCATION + "background.png";
     public static final String PLAYER = PLAYER_LOCATION + "player.png";
 
     public static final String SIMPLE_PLATFORM = PLATFORM_LOCATION + "simple_platform.png";
+    public static final String GROUND_PLATFORM = PLATFORM_LOCATION + "ground_platform.png";
+    public static final String WALL = PLATFORM_LOCATION + "wall.png";
 
     List<String> spritePaths;
     HashMap<String, Sprite> spriteMap;
@@ -32,9 +34,11 @@ public class ImageLoader {
     private void fillList() {
         spritePaths = new ArrayList<>();
 
-        spritePaths.add(SPLASH);
-        spritePaths.add(SIMPLE_PLATFORM);
+        spritePaths.add(BACKGROUND);
         spritePaths.add(PLAYER);
+        spritePaths.add(SIMPLE_PLATFORM);
+        spritePaths.add(GROUND_PLATFORM);
+        spritePaths.add(WALL);
     }
 
     private void populateMap() {

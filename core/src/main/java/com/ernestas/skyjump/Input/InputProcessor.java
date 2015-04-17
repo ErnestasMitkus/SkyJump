@@ -142,6 +142,15 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
         return keys[keycode] == KEY_PRESSED;
     }
 
+    public void consume(int keycode) {
+        for (DelayStruct struct : delayStruct) {
+            if (struct.index == keycode) {
+                delayStruct.remove(struct);
+                return;
+            }
+        }
+    }
+
     public boolean mouseButtonPressed(int button) {
         if (button < 0 || button >= buttons.length) {
             System.err.println("MOUSE BUTTON INDEX OUT OF BOUNDS. int[" + button + "]");
