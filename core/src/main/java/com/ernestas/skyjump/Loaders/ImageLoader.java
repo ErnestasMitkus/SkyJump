@@ -13,14 +13,22 @@ public class ImageLoader {
     private static final String SPRITE_LOCATION = "Sprites/";
     private static final String PLATFORM_LOCATION = SPRITE_LOCATION + "Platforms/";
     private static final String PLAYER_LOCATION = SPRITE_LOCATION + "Player/";
+    private static final String MISC_LOCATION = SPRITE_LOCATION + "Misc/";
 
     // everything here must be in the map
     public static final String BACKGROUND = SPRITE_LOCATION + "background.png";
-    public static final String PLAYER = PLAYER_LOCATION + "player.png";
+    public static final String BACKGROUND_RED = SPRITE_LOCATION + "backgroundRed.png";
+    public static final String PLAYERSS = PLAYER_LOCATION + "playerSS.png";
 
     public static final String SIMPLE_PLATFORM = PLATFORM_LOCATION + "simple_platform.png";
     public static final String GROUND_PLATFORM = PLATFORM_LOCATION + "ground_platform.png";
     public static final String WALL = PLATFORM_LOCATION + "wall.png";
+    public static final String CORRUPT = PLATFORM_LOCATION + "corrupt.png";
+
+    public static final String FLAG = MISC_LOCATION + "flag.png";
+    public static final String HAND = MISC_LOCATION + "hand.png";
+    public static final String ARROW = MISC_LOCATION + "arrow.png";
+    public static final String FRAME = MISC_LOCATION + "frame.png";
 
     List<String> spritePaths;
     HashMap<String, Sprite> spriteMap;
@@ -35,10 +43,16 @@ public class ImageLoader {
         spritePaths = new ArrayList<>();
 
         spritePaths.add(BACKGROUND);
-        spritePaths.add(PLAYER);
+        spritePaths.add(BACKGROUND_RED);
+        spritePaths.add(PLAYERSS);
         spritePaths.add(SIMPLE_PLATFORM);
         spritePaths.add(GROUND_PLATFORM);
+        spritePaths.add(CORRUPT);
         spritePaths.add(WALL);
+        spritePaths.add(FLAG);
+        spritePaths.add(HAND);
+        spritePaths.add(ARROW);
+        spritePaths.add(FRAME);
     }
 
     private void populateMap() {
@@ -77,7 +91,7 @@ public class ImageLoader {
             }
         }
 
-        return new ScaledSprite(sprite);
+        return new ScaledSprite(new Sprite(sprite));
     }
 
 }

@@ -16,6 +16,7 @@ import com.ernestas.skyjump.Input.InputProcessor;
 import com.ernestas.skyjump.Loaders.LevelProvider;
 import com.ernestas.skyjump.MyGame;
 import com.ernestas.skyjump.Settings.Settings;
+import com.ernestas.skyjump.Util.Vectors.Vector2f;
 
 public class PlayScreen implements Screen {
 
@@ -42,15 +43,14 @@ public class PlayScreen implements Screen {
     @Override
     public void show() {
         level = LevelProvider.generateLevel("Levels/testlevel.json");
-        level.init(input);
+        level.init(camera, input);
         reset();
     }
 
     private void reset() {
         level.reset();
 
-        Vector2 vec = new Vector2();
-        level.getPlayer().getBounds().getCenter(vec);
+        Vector2f vec = level.getPlayer().getPosition();
 
         camera.position.set(vec.x, vec.y, 0);
         camera.update();
@@ -81,6 +81,7 @@ public class PlayScreen implements Screen {
         renderer.setProjectionMatrix(camera.combined);
 
         level.getPlatforms().forEach((platform) -> renderWithColor(renderer, platform.getBounds(), Color.BLUE));
+        level.getEvents().forEach((event) -> renderWithColor(renderer, event.getBounds(), Color.BLUE));
 
         renderWithColor(renderer, level.getPlayer().getBounds(), Color.GREEN);
 
@@ -101,11 +102,18 @@ public class PlayScreen implements Screen {
         if (input.isPressedAdvanced(Keys.ESCAPE)) {
             pause = !pause;
         }
+        if (input.isPressedAdvanced(Keys.BACKSPACE)) {
+            System.out.println("player's position: " + level.getPlayer().getPosition());
+        }
         if (input.isPressedAdvanced(Keys.R)) {
             reset();
         }
 
         updateCamera(delta);
+
+        if (pause) {
+            return;
+        }
 
         level.update(delta);
     }
@@ -113,30 +121,34 @@ public class PlayScreen implements Screen {
     private void updateCamera(float delta) {
         boolean hardFocusCam = false;
         float dx, dy;
-        Vector2 vec = new Vector2();
-        level.getPlayer().getBounds().getCenter(vec);
+        Vector2f vec = level.getPlayer().getPosition();
 
         dx = vec.x - camera.position.x;
         if (Math.abs(vec.x - camera.position.x) < 0.5f || hardFocusCam) {
             dx = vec.x - camera.position.x;
         } else {
-            dx *= cameraMaximumSpeed * Math.pow(delta, 2);
+            dx *= cameraMaximumSpeed * Math.pow(delta, 1.8);
         }
 
         dy = vec.y - camera.position.y;
         if (Math.abs(vec.y - camera.position.y) < 0.5f || hardFocusCam) {
             dy = vec.y - camera.position.y;
         } else {
-            dy *= cameraMaximumSpeed * Math.pow(delta, 2);
+            dy *= cameraMaximumSpeed * Math.pow(delta, 1.8);
         }
 
         if (camera.position.y + dy < camera.viewportHeight / 2) {
             dy = camera.viewportHeight / 2 - camera.position.y;
         }
         if (!level.inSecret()) {
+            float simpleEndOffset = 2382 * Settings.getScale();
+            // simple game
             if (camera.position.x + dx < camera.viewportWidth / 2) {
                 dx = camera.viewportWidth / 2 - camera.position.x;
+            } else if (camera.position.x + dx > simpleEndOffset - camera.viewportWidth / 2) {
+                dx = simpleEndOffset - camera.position.x - camera.viewportWidth / 2;
             }
+
         }
 
         camera.translate(dx, dy);
@@ -145,7 +157,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override

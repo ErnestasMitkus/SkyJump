@@ -26,7 +26,7 @@ public class DesktopLauncher {
         config.foregroundFPS = Settings.getFrameRate();
         config.backgroundFPS = Settings.getFrameRate();
 
-        config.vSyncEnabled = false;
+        config.vSyncEnabled = true;
         config.resizable = false;
         config.useGL30 = false;
 

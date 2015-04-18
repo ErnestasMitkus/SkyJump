@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.ernestas.skyjump.Input.InputProcessor;
 import com.ernestas.skyjump.Loaders.GlobalLoader;
 import com.ernestas.skyjump.Screens.PlayScreen;
-import com.ernestas.skyjump.Screens.TestScreen;
 
 public class MyGame extends Game {
     public static String GAME_TITLE = "Sky Jump";

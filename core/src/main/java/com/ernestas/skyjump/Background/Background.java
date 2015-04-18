@@ -15,7 +15,11 @@ public class Background {
     List<ScaledSprite> bgLoopList = new ArrayList<>();
 
     public Background(Rectangle bounds) {
-        ScaledSprite bg = new ScaledSprite(GameResources.getImageLoader().getImage(ImageLoader.BACKGROUND));
+        this(bounds, GameResources.getImageLoader().getImage(ImageLoader.BACKGROUND));
+    }
+
+    public Background(Rectangle bounds, Sprite sprite) {
+        ScaledSprite bg = new ScaledSprite(sprite);
 
         fillRectangleWithBg(bg, bounds);
     }
