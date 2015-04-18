@@ -1,6 +1,8 @@
 package com.ernestas.skyjump.Gameplay.Events;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.ernestas.skyjump.Audio.SoundPlayer;
+import com.ernestas.skyjump.Loaders.SoundLoader;
 import com.ernestas.skyjump.Util.Vectors.Vector2f;
 
 public class EventHand extends Event {
@@ -25,6 +27,7 @@ public class EventHand extends Event {
         if (level.getPlayer().getBounds().overlaps(growBounds) && !grow) {
             grow = true;
             leftToGrow = sprite.getBoundingRectangle().getHeight();
+            SoundPlayer.playSound(SoundLoader.BOO);
         }
 
         if (grow) {

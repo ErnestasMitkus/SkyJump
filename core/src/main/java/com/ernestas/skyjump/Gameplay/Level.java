@@ -1,12 +1,14 @@
 package com.ernestas.skyjump.Gameplay;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.ernestas.skyjump.Audio.MusicPlayer;
 import com.ernestas.skyjump.Background.Background;
 import com.ernestas.skyjump.Fonts.FontFactory;
 import com.ernestas.skyjump.Gameplay.Events.Event;
@@ -63,6 +65,7 @@ public class Level {
 
     private ScaledSprite arrowSprite;
 
+    private InputProcessor input;
     private Frame frame;
 
     // fields
@@ -74,13 +77,19 @@ public class Level {
     private boolean inSecret = false;
 
     private boolean gameWon = false;
+    private boolean goToMenu = false;
+
+    private MusicPlayer mp;
 
     private Level() {
         platformList = new ArrayList<>();
         eventList = new ArrayList<>();
     }
 
-    public void init(OrthographicCamera camera, InputProcessor input) {
+    public void init(OrthographicCamera camera, InputProcessor input, MusicPlayer mp) {
+        this.input = input;
+        this.mp = mp;
+
         background = new Background(new Rectangle(0, -100, 4000, 2100));
         redBackground = new ScaledSprite(GameResources.getImageLoader().getImage(ImageLoader.BACKGROUND_RED));
         redBackground.setPosition(-10000, 0);
@@ -102,6 +111,7 @@ public class Level {
     }
 
     public void reset() {
+        mp.playHeaven();
         inSecret = false;
         gameWon = false;
         player.restart();
@@ -112,6 +122,9 @@ public class Level {
 
     public void update(float delta) {
         if (player.isDead() || gameWon) {
+            if (input.isPressedAdvanced(Input.Keys.ENTER)) {
+                goToMenu = true;
+            }
             return;
         }
 
@@ -122,8 +135,12 @@ public class Level {
         }
         if (player.getPosition().x < 0) {
             inSecret = true;
+            mp.playHell();
         } else if (player.getPosition().x - 100f > Settings.getWidth()) {
             inSecret = false;
+        }
+        if (player.getPosition().x > 0) {
+            mp.playHeaven();
         }
         platformList.forEach((platform) -> platform.update(delta));
         eventList.forEach((event) -> {
@@ -225,7 +242,7 @@ public class Level {
 
     public void playerDied() {
         frame.setText("YOU DIED");
-        frame.addText("Maybe you will not try to follow the rules?");
+        frame.addText("Please follow the rules... :(");
         player.die();
     }
 
@@ -234,5 +251,7 @@ public class Level {
         frame.addText("Congratulations :)");
         gameWon = true;
     }
+
+    public boolean goToMenu() { return goToMenu; }
 
 }

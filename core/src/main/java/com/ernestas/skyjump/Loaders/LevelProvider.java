@@ -19,23 +19,19 @@ import java.util.List;
 public class LevelProvider {
     private LevelProvider() {}
 
-    public static Level generateLevel(String path) {
+    public static Level generateLevel(String lines) {
         Level.Builder builder = new Level.Builder();
         JSONObject obj;
 
         try {
-            obj = new JSONObject(FileStringifier.fileToString(path));
+            obj = new JSONObject(lines);
 
             getPlatforms(obj).forEach((platform) -> builder.addPlatform(platform));
             getEvents(obj).forEach((event) -> builder.addEvent(event));
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("FAILED TO PARSE JSON FILE TO STRING");
-            e.printStackTrace();
-            return null;
-        } catch (JSONException e) {
-            System.err.println("FAILED TO PARSE JSON OBJECT FROM STRING");
             e.printStackTrace();
             return null;
         }

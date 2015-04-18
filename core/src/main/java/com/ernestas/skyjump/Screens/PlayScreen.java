@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ernestas.skyjump.Audio.MusicPlayer;
 import com.ernestas.skyjump.Gameplay.Level;
 import com.ernestas.skyjump.Gameplay.Player;
 import com.ernestas.skyjump.Input.InputProcessor;
@@ -33,17 +34,20 @@ public class PlayScreen implements Screen {
     private boolean debug = false;
     private boolean pause = false;
 
+    private MusicPlayer mp;
+
     public PlayScreen(MyGame game) {
         this.game = game;
         input = game.getInput();
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Settings.getWidth(), Settings.getHeight());
+        mp = new MusicPlayer();
     }
 
     @Override
     public void show() {
-        level = LevelProvider.generateLevel("Levels/testlevel.json");
-        level.init(camera, input);
+        level = LevelProvider.generateLevel(Gdx.files.internal("Levels/testlevel.json").readString());
+        level.init(camera, input, mp);
         reset();
     }
 
@@ -94,20 +98,21 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float delta) {
+        mp.update(delta);
         input.update(delta);
 
-        if (input.isPressedAdvanced(Keys.STAR)) {
-            debug = !debug;
-        }
-        if (input.isPressedAdvanced(Keys.ESCAPE)) {
-            pause = !pause;
-        }
-        if (input.isPressedAdvanced(Keys.BACKSPACE)) {
-            System.out.println("player's position: " + level.getPlayer().getPosition());
-        }
-        if (input.isPressedAdvanced(Keys.R)) {
-            reset();
-        }
+//        if (input.isPressedAdvanced(Keys.STAR)) {
+//            debug = !debug;
+//        }
+//        if (input.isPressedAdvanced(Keys.ESCAPE)) {
+//            pause = !pause;
+//        }
+//        if (input.isPressedAdvanced(Keys.BACKSPACE)) {
+//            System.out.println("player's position: " + level.getPlayer().getPosition());
+//        }
+//        if (input.isPressedAdvanced(Keys.R)) {
+//            reset();
+//        }
 
         updateCamera(delta);
 
@@ -116,6 +121,10 @@ public class PlayScreen implements Screen {
         }
 
         level.update(delta);
+
+        if (level.goToMenu()) {
+            game.setScreen(new MenuScreen(game));
+        }
     }
 
     private void updateCamera(float delta) {

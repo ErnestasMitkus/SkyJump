@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.ernestas.skyjump.Audio.SoundPlayer;
 import com.ernestas.skyjump.Input.InputProcessor;
 import com.ernestas.skyjump.Loaders.ImageLoader;
+import com.ernestas.skyjump.Loaders.SoundLoader;
 import com.ernestas.skyjump.Resources.GameResources;
 import com.ernestas.skyjump.Settings.Settings;
 import com.ernestas.skyjump.Sprite.Animation;
@@ -137,7 +139,7 @@ public class Player {
             }
         }
 
-        float inSecretCoef = level.inSecret() ? 1.5f : 1f;
+        float inSecretCoef = position.x < 0 ? 1.5f : 1f;
 
 //        if (input.isPressedWithDelay(Keys.SPACE, 0.1f)) {
         if (input.isPressed(Keys.SPACE)) {
@@ -147,6 +149,7 @@ public class Player {
                 isJumping = true;
                 touchedGround = false;
                 mov.y += jumpStrength * Math.max(1f, (inSecretCoef * 0.8f));
+                SoundPlayer.playSound(SoundLoader.JUMP);
             }
         }
 

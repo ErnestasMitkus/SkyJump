@@ -15,6 +15,9 @@ public class GlobalLoader {
         // FontFactory
 
         // SoundFactory
+        SoundLoader soundLoader = new SoundLoader();
+        soundLoader.load();
+        GameResources.setSoundLoader(soundLoader);
 
     }
 

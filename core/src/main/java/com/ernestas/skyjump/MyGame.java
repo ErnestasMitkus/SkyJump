@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.ernestas.skyjump.Input.InputProcessor;
 import com.ernestas.skyjump.Loaders.GlobalLoader;
+import com.ernestas.skyjump.Screens.MenuScreen;
 import com.ernestas.skyjump.Screens.PlayScreen;
 
 public class MyGame extends Game {
@@ -19,7 +20,8 @@ public class MyGame extends Game {
 
         loadResources();
 
-        setScreen(new PlayScreen(this));
+        setScreen(new MenuScreen(this));
+//        setScreen(new PlayScreen(this));
     }
 
     private void loadResources() {

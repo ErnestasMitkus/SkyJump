@@ -18,6 +18,9 @@ public class ImageLoader {
     // everything here must be in the map
     public static final String BACKGROUND = SPRITE_LOCATION + "background.png";
     public static final String BACKGROUND_RED = SPRITE_LOCATION + "backgroundRed.png";
+    public static final String MENU_BACKGROUND = SPRITE_LOCATION + "menuBackground.png";
+
+
     public static final String PLAYERSS = PLAYER_LOCATION + "playerSS.png";
 
     public static final String SIMPLE_PLATFORM = PLATFORM_LOCATION + "simple_platform.png";
@@ -44,6 +47,7 @@ public class ImageLoader {
 
         spritePaths.add(BACKGROUND);
         spritePaths.add(BACKGROUND_RED);
+        spritePaths.add(MENU_BACKGROUND);
         spritePaths.add(PLAYERSS);
         spritePaths.add(SIMPLE_PLATFORM);
         spritePaths.add(GROUND_PLATFORM);
