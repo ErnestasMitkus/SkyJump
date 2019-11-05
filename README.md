@@ -4,6 +4,7 @@ This game was created in 24 hours for a GameJam event hosted by Vilniaus Univers
 
 ## Launching the game
 To launch the game simply go to the game folder and launch the SkyJump.jar file.
+For development, use Grails version 1.11
 
 ## Theme
 
@@ -19,3 +20,9 @@ despite what the game instructions were.
 
 Game author is Ernestas Mitkus. The game was created in 2015-04-18.
 All graphics are made by me. Music and sounds used are copyright-free.
+
+## Images
+
+![image](path1.png)
+![image](path2.png)
+
